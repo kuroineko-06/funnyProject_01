@@ -2,9 +2,11 @@ import 'package:demo_app_1/featured/bloc/home_bloc.dart';
 import 'package:demo_app_1/featured/pages/account.dart';
 import 'package:demo_app_1/featured/pages/details.dart';
 import 'package:demo_app_1/featured/pages/search.dart';
+import 'package:demo_app_1/featured/pages/setting.dart';
 import 'package:demo_app_1/featured/widgets/home_categories.dart';
 import 'package:demo_app_1/featured/widgets/home_recommened.dart';
 import 'package:demo_app_1/featured/widgets/home_slide.dart';
+import 'package:demo_app_1/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -51,7 +53,9 @@ class _HomeState extends State<Home> {
         _navigatorKey.currentState?.pushReplacementNamed("message");
         break;
       case 4:
-        _navigatorKey.currentState?.pushReplacementNamed("profile");
+        _navigatorKey.currentState?.pushReplacementNamed("setting");
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const Setting()));
         break;
     }
     return setState(() {
@@ -104,6 +108,14 @@ class _HomeState extends State<Home> {
                   ),
                 ],
               ),
+              // floatingActionButton: FloatingActionButton(
+              //   onPressed: () {
+              //     setState(() {
+              //       isDarkMode = !isDarkMode;
+              //     });
+              //   },
+              //   child: Icon(Icons.lightbulb),
+              // ),
               body: SingleChildScrollView(
                 child: Column(
                   children: [
