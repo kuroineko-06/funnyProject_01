@@ -6,7 +6,6 @@ import 'package:demo_app_1/featured/pages/setting.dart';
 import 'package:demo_app_1/featured/widgets/home_categories.dart';
 import 'package:demo_app_1/featured/widgets/home_recommened.dart';
 import 'package:demo_app_1/featured/widgets/home_slide.dart';
-import 'package:demo_app_1/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';

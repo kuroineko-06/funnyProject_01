@@ -1,3 +1,2 @@
-touchId (faceId)
-setting
-darkMode
+add register page
+
