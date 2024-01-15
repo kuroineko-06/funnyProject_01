@@ -1,4 +1,7 @@
+import 'package:demo_app_1/featured/pages/home_pages.dart';
+import 'package:demo_app_1/service/local_auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:indexed/indexed.dart';
 
 class Account extends StatefulWidget {
@@ -10,14 +13,19 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
   final _formKey = GlobalKey<FormState>();
-  String email = "";
-  String password = "";
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  String email = "test@gmail.com";
+  String password = "test123";
 
   void _submit() {
-    if (_formKey.currentState!.validate()) {
+    if (email == emailController.text && password == passwordController.text) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Processing Data')),
+        const SnackBar(content: Text('Invalid data')),
       );
+      passwordController.text = "";
     }
   }
 
@@ -33,7 +41,7 @@ class _AccountState extends State<Account> {
         child: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                   image: NetworkImage(
                       'https://th.bing.com/th/id/OIP.W8moc3fm3nvLSO90Dc_VkgHaO0?rs=1&pid=ImgDetMain'))),
           child: Column(
@@ -41,7 +49,7 @@ class _AccountState extends State<Account> {
               Indexer(
                 children: <Widget>[
                   Indexed(
-                    index: 1000,
+                    index: 10,
                     child: Container(
                       margin:
                           EdgeInsets.symmetric(horizontal: 25, vertical: 100),
@@ -76,6 +84,7 @@ class _AccountState extends State<Account> {
                                   height: 100,
                                   alignment: Alignment.center,
                                   child: TextFormField(
+                                    controller: emailController,
                                     decoration: InputDecoration(
                                         contentPadding: EdgeInsets.all(10),
                                         border: OutlineInputBorder(
@@ -108,6 +117,7 @@ class _AccountState extends State<Account> {
                                 Container(
                                   alignment: Alignment.center,
                                   child: TextFormField(
+                                    controller: passwordController,
                                     // onChanged: () {},
                                     obscuringCharacter: "*",
                                     decoration: InputDecoration(
@@ -143,18 +153,52 @@ class _AccountState extends State<Account> {
                                 SizedBox(
                                   child: Container(
                                       margin:
-                                          EdgeInsets.only(top: 20, left: 10),
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.teal,
-                                          fixedSize: Size.fromWidth(100),
-                                          padding: EdgeInsets.all(10),
-                                        ),
-                                        child: Text(
-                                          "Sign In",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        onPressed: _submit,
+                                          EdgeInsets.only(top: 30, left: 30),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.teal,
+                                              fixedSize: Size.fromWidth(100),
+                                              padding: EdgeInsets.all(15),
+                                            ),
+                                            child: Text(
+                                              "Sign In",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            onPressed: _submit,
+                                          ),
+                                          ElevatedButton.icon(
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.teal,
+                                                fixedSize: Size.fromWidth(150),
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 10)),
+                                            onPressed: () async {
+                                              bool auth = await Auththentication
+                                                  .authentication();
+                                              if (auth == true) {
+                                                print(
+                                                    'Can authenticate: $auth');
+                                                Get.to(() => Home());
+                                              } else
+                                                print("Can authenticated!");
+                                            },
+                                            icon: Icon(
+                                              Icons.fingerprint_outlined,
+                                              color: Colors.red,
+                                              size: 30,
+                                            ),
+                                            label: Text(
+                                              'FingerPrint',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
                                       )),
                                 ),
                                 Container(

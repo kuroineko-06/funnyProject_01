@@ -1,4 +1,3 @@
-import 'package:demo_app_1/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:toggle_switch/toggle_switch.dart';

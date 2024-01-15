@@ -1,4 +1,6 @@
+import 'package:demo_app_1/featured/pages/account.dart';
 import 'package:demo_app_1/featured/pages/home_pages.dart';
+import 'package:demo_app_1/featured/pages/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Home(),
+      home: Account(),
     );
   }
 }
