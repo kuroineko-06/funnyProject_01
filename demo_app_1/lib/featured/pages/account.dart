@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:demo_app_1/featured/pages/home_pages.dart';
 import 'package:demo_app_1/service/local_auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:indexed/indexed.dart';
 
 class Account extends StatefulWidget {
@@ -13,19 +16,32 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
   final _formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  String email = "test@gmail.com";
-  String password = "test123";
+  final email = TextEditingController();
+  final password = TextEditingController();
 
-  void _submit() {
-    if (email == emailController.text && password == passwordController.text) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid data')),
+  void Login(email, password) async {
+    if (_formKey.currentState!.validate()) {
+      Map data = {
+        "email": email,
+        "password": password,
+      };
+      print(data);
+      var url = 'https://65a4e6d952f07a8b4a3de5b9.mockapi.io/api/user-manager';
+      var response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(data),
       );
-      passwordController.text = "";
+      print(response.body);
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Login complete!!")));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const Home()));
+        print('success');
+      } else {
+        print('error');
+      }
     }
   }
 
@@ -84,7 +100,7 @@ class _AccountState extends State<Account> {
                                   height: 100,
                                   alignment: Alignment.center,
                                   child: TextFormField(
-                                    controller: emailController,
+                                    controller: email,
                                     decoration: InputDecoration(
                                         contentPadding: EdgeInsets.all(10),
                                         border: OutlineInputBorder(
@@ -102,12 +118,12 @@ class _AccountState extends State<Account> {
                                     keyboardType: TextInputType.emailAddress,
                                     onFieldSubmitted: (value) {
                                       setState(() {
-                                        email = value;
+                                        email.text = value;
                                       });
                                     },
                                     validator: (value) {
                                       if (value!.isEmpty ||
-                                          value.contains('@')) {
+                                          !value.contains('@')) {
                                         return "Invalid Email!!!";
                                       }
                                       ;
@@ -117,7 +133,7 @@ class _AccountState extends State<Account> {
                                 Container(
                                   alignment: Alignment.center,
                                   child: TextFormField(
-                                    controller: passwordController,
+                                    controller: password,
                                     // onChanged: () {},
                                     obscuringCharacter: "*",
                                     decoration: InputDecoration(
@@ -138,14 +154,17 @@ class _AccountState extends State<Account> {
                                     keyboardType: TextInputType.visiblePassword,
                                     obscureText: true,
                                     validator: (value) {
-                                      if (value!.isEmpty && value.length < 8) {
+                                      if (value!.isEmpty) {
                                         return 'Invalid Password!';
+                                      }
+                                      if (value.length < 8) {
+                                        return 'Password should have more 8 characters';
                                       }
                                       ;
                                     },
                                     onFieldSubmitted: (value) {
                                       setState(() {
-                                        value = password;
+                                        value = password.text;
                                       });
                                     },
                                   ),
@@ -159,18 +178,20 @@ class _AccountState extends State<Account> {
                                             MainAxisAlignment.spaceAround,
                                         children: [
                                           ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.teal,
-                                              fixedSize: Size.fromWidth(100),
-                                              padding: EdgeInsets.all(15),
-                                            ),
-                                            child: Text(
-                                              "Sign In",
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                            onPressed: _submit,
-                                          ),
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.teal,
+                                                fixedSize: Size.fromWidth(100),
+                                                padding: EdgeInsets.all(15),
+                                              ),
+                                              child: Text(
+                                                "Sign In",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              onPressed: () {
+                                                Login(
+                                                    email.text, password.text);
+                                              }),
                                           ElevatedButton.icon(
                                             style: ElevatedButton.styleFrom(
                                                 backgroundColor: Colors.teal,

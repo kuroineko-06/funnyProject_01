@@ -1,4 +1,5 @@
 import 'package:demo_app_1/featured/pages/account.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:indexed/indexed.dart';
 
@@ -11,20 +12,34 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final _formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  String email = "test@gmail.com";
-  String password = "test123";
+  final email = TextEditingController();
+  final name = TextEditingController();
+  final password = TextEditingController();
 
-  void _submit() {
-    if (email == emailController.text && password == passwordController.text) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Account()));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid data')),
+  void register(String name, email, password) async {
+    if (_formKey.currentState!.validate()) {
+      Map data = {
+        "name": name,
+        "email": email,
+        "password": password,
+      };
+      print(data);
+      var url = 'https://65a4e6d952f07a8b4a3de5b9.mockapi.io/api/user-manager';
+      var response = await http.post(
+        Uri.parse(url),
+        body: data,
       );
-      passwordController.text = "";
+      print(response.body);
+      print(response.statusCode);
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Register complete!!")));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const Account()));
+        print('success');
+      } else {
+        print('error');
+      }
     }
   }
 
@@ -69,7 +84,7 @@ class _RegisterState extends State<Register> {
                           Container(
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             child: TextFormField(
-                              controller: emailController,
+                              controller: name,
                               decoration: InputDecoration(
                                   contentPadding: EdgeInsets.all(10),
                                   border: OutlineInputBorder(
@@ -84,10 +99,10 @@ class _RegisterState extends State<Register> {
                                     color: Colors.amberAccent,
                                     size: 30,
                                   )),
-                              keyboardType: TextInputType.emailAddress,
+                              keyboardType: TextInputType.name,
                               onFieldSubmitted: (value) {
                                 setState(() {
-                                  email = value;
+                                  name.text = value;
                                 });
                               },
                               validator: (value) {
@@ -102,7 +117,7 @@ class _RegisterState extends State<Register> {
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             margin: EdgeInsets.only(top: 20),
                             child: TextFormField(
-                              controller: emailController,
+                              controller: email,
                               decoration: InputDecoration(
                                   contentPadding: EdgeInsets.all(10),
                                   border: OutlineInputBorder(
@@ -120,12 +135,12 @@ class _RegisterState extends State<Register> {
                               keyboardType: TextInputType.emailAddress,
                               onFieldSubmitted: (value) {
                                 setState(() {
-                                  email = value;
+                                  email.text = value;
                                 });
                               },
                               validator: (value) {
-                                if (value!.isEmpty || value.contains('@')) {
-                                  return "Invalid Email!!!";
+                                if (value!.isEmpty || !value.contains('@')) {
+                                  return "Email need @";
                                 }
                                 ;
                               },
@@ -136,7 +151,7 @@ class _RegisterState extends State<Register> {
                             margin: EdgeInsets.only(top: 20),
                             alignment: Alignment.center,
                             child: TextFormField(
-                              controller: passwordController,
+                              controller: password,
                               // onChanged: () {},
                               obscuringCharacter: "*",
                               decoration: InputDecoration(
@@ -157,14 +172,17 @@ class _RegisterState extends State<Register> {
                               keyboardType: TextInputType.visiblePassword,
                               obscureText: true,
                               validator: (value) {
-                                if (value!.isEmpty && value.length < 8) {
-                                  return 'Invalid Password!';
+                                if (value!.isEmpty) {
+                                  return 'Invalid Password!!!';
+                                }
+                                if (value.length < 8) {
+                                  return 'Password should have more 8 characters';
                                 }
                                 ;
                               },
                               onFieldSubmitted: (value) {
                                 setState(() {
-                                  value = password;
+                                  value = password.text;
                                 });
                               },
                             ),
@@ -185,7 +203,9 @@ class _RegisterState extends State<Register> {
                                 "Sign Up",
                                 style: TextStyle(color: Colors.white),
                               ),
-                              onPressed: _submit,
+                              onPressed: () {
+                                register(name.text, email.text, password.text);
+                              },
                             ),
                           ),
                         ],

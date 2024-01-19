@@ -1,4 +1,6 @@
+import 'package:demo_app_1/data/categoris.dart';
 import 'package:demo_app_1/featured/bloc/search_bloc.dart';
+import 'package:demo_app_1/featured/models/categories_data_model.dart';
 import 'package:demo_app_1/featured/pages/account.dart';
 import 'package:demo_app_1/featured/widgets/home_categories.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,7 @@ class _SearchState extends State<Search> {
   }
 
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-  final SearchBloc searchBloc = SearchBloc();
+  final SearchBloc searchBloc = SearchBloc(CategoriesCourse());
 
   int _selectedIndex = 0;
   void _onItemTapped(int index) {
@@ -76,6 +78,7 @@ class _SearchState extends State<Search> {
           switch (state.runtimeType) {
             case SearchSuccessState:
               final successState = state as SearchSuccessState;
+              List<DataCategoriesModel> data_model = successState.dataItems;
               return SingleChildScrollView(
                 child: Column(
                   children: [
@@ -115,11 +118,11 @@ class _SearchState extends State<Search> {
                                   child: new ListView.builder(
                                       scrollDirection: Axis.vertical,
                                       // shrinkWrap: true,
-                                      itemCount: successState.dataItems.length,
+                                      itemCount: data_model.length,
                                       itemBuilder: (context, index) {
                                         return CategoriesWidgets(
-                                            dataModel:
-                                                successState.dataItems[index]);
+                                            dataCategoriesModel:
+                                                data_model[index]);
                                       }),
                                 ),
                               ),

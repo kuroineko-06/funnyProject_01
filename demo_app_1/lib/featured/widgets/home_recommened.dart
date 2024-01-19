@@ -1,9 +1,9 @@
-import 'package:demo_app_1/featured/models/home_data_model.dart';
+import 'package:demo_app_1/featured/models/categories_data_model.dart';
 import 'package:flutter/material.dart';
 
 class RecommendWidgets extends StatelessWidget {
-  final DataModel dataModel;
-  const RecommendWidgets({super.key, required this.dataModel});
+  final DataCategoriesModel dataCategoriesModel;
+  const RecommendWidgets({super.key, required this.dataCategoriesModel});
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +27,14 @@ class RecommendWidgets extends StatelessWidget {
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             fit: BoxFit.fill,
-                            image: NetworkImage(dataModel.imageUrl))),
+                            image: NetworkImage(
+                                dataCategoriesModel.ImageURL as String))),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 5.0),
                   child: Text(
-                    dataModel.title,
+                    dataCategoriesModel.CourseName as String,
                     style: TextStyle(
                         overflow: TextOverflow.clip,
                         fontWeight: FontWeight.bold),

@@ -1,9 +1,9 @@
-import 'package:demo_app_1/featured/models/home_data_model.dart';
+import 'package:demo_app_1/featured/models/categories_data_model.dart';
 import 'package:flutter/material.dart';
 
 class SlideWidgets extends StatelessWidget {
-  final DataModel dataModel;
-  const SlideWidgets({super.key, required this.dataModel});
+  final DataCategoriesModel dataSliderModel;
+  const SlideWidgets({super.key, required this.dataSliderModel});
 
   @override
   Widget build(BuildContext context) {
@@ -25,18 +25,22 @@ class SlideWidgets extends StatelessWidget {
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: NetworkImage(dataModel.imageUrl))),
+                          image: NetworkImage(
+                              dataSliderModel.ImageURL as String))),
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
                       children: [
                         Center(
                           child: Text(
-                            dataModel.title,
+                            dataSliderModel.CourseName as String,
+                            textAlign: TextAlign.justify,
                             style: const TextStyle(
+                              height: 2,
+                              backgroundColor: Color.fromARGB(255, 73, 73, 73),
                               fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red,
+                              fontWeight: FontWeight.w700,
+                              color: Color.fromARGB(255, 255, 154, 154),
                             ),
                           ),
                         ),
@@ -44,15 +48,20 @@ class SlideWidgets extends StatelessWidget {
                           alignment: Alignment.topLeft,
                           margin: EdgeInsets.only(left: 20, top: 30),
                           child: SizedBox(
-                            width: 220,
+                            width: 500,
+                            height: 90,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  dataModel.description,
+                                  dataSliderModel.Content as String,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 3,
+                                  textAlign: TextAlign.left,
                                   style: const TextStyle(
-                                      color: Colors.blue,
-                                      fontSize: 20,
+                                      backgroundColor: Colors.white,
+                                      color: Color.fromARGB(255, 15, 56, 89),
+                                      fontSize: 19,
                                       fontWeight: FontWeight.w800),
                                 ),
                               ],
@@ -60,15 +69,17 @@ class SlideWidgets extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          height: 30,
+                          height: 38,
                           child: Container(
+                            padding: EdgeInsets.all(8),
                             alignment: Alignment.bottomRight,
                             child: Text(
-                                "Price: \$" + dataModel.price.toString(),
+                                "Price: \$" + dataSliderModel.Price.toString(),
                                 style: TextStyle(
+                                    backgroundColor: Colors.white,
                                     fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white)),
+                                    fontWeight: FontWeight.w500,
+                                    color: Color.fromARGB(255, 16, 17, 15))),
                           ),
                         ),
                       ],

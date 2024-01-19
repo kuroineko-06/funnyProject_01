@@ -8,6 +8,7 @@ final class SearchInitial extends SearchState {}
 class SearchActionState extends SearchState {}
 
 class SearchSuccessState extends SearchState {
-  final List<DataModel> dataItems;
-  SearchSuccessState({required this.dataItems});
+  final List<DataCategoriesModel> dataItems;
+  SearchSuccessState(this.dataItems);
+  List<Object?> get props => [dataItems];
 }

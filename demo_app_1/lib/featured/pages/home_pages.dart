@@ -1,4 +1,6 @@
+import 'package:demo_app_1/data/categoris.dart';
 import 'package:demo_app_1/featured/bloc/home_bloc.dart';
+import 'package:demo_app_1/featured/models/categories_data_model.dart';
 import 'package:demo_app_1/featured/pages/account.dart';
 import 'package:demo_app_1/featured/pages/details.dart';
 import 'package:demo_app_1/featured/pages/search.dart';
@@ -8,7 +10,6 @@ import 'package:demo_app_1/featured/widgets/home_recommened.dart';
 import 'package:demo_app_1/featured/widgets/home_slide.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -24,7 +25,7 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
-  final HomeBloc homeBloc = HomeBloc();
+  final HomeBloc homeBloc = HomeBloc(CategoriesCourse());
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   int _selectedIndex = 0;
@@ -80,10 +81,13 @@ class _HomeState extends State<Home> {
 
           case HomeLoadedSuccessState:
             final successState = state as HomeLoadedSuccessState;
+            List<DataCategoriesModel> data_model = successState.data_categories;
+            List<DataCategoriesModel> data_slider_model =
+                successState.data_categories;
+
             return Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: false,
-                backgroundColor: Colors.white,
                 centerTitle: true,
                 title: Text('influencer.'),
                 leading: Padding(
@@ -107,14 +111,6 @@ class _HomeState extends State<Home> {
                   ),
                 ],
               ),
-              // floatingActionButton: FloatingActionButton(
-              //   onPressed: () {
-              //     setState(() {
-              //       isDarkMode = !isDarkMode;
-              //     });
-              //   },
-              //   child: Icon(Icons.lightbulb),
-              // ),
               body: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -123,11 +119,11 @@ class _HomeState extends State<Home> {
                       child: SizedBox(
                         height: 210.0,
                         child: ListView.builder(
-                            itemCount: successState.data.length,
+                            itemCount: data_model.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               return SlideWidgets(
-                                  dataModel: successState.data[index]);
+                                  dataSliderModel: data_slider_model[index]);
                             }),
                       ),
                     ),
@@ -149,16 +145,28 @@ class _HomeState extends State<Home> {
                             child: new ListView.builder(
                               scrollDirection: Axis.horizontal,
                               shrinkWrap: true,
-                              itemCount: successState.data.length,
+                              itemCount: data_model.length,
                               itemBuilder: (context, index) {
                                 return TextButton(
                                   style: TextButton.styleFrom(
                                       foregroundColor: Colors.white),
                                   onPressed: () {
-                                    Get.to(() => Details());
+                                    // Get.to(() => DetailScreen(
+                                    //     item: snapshot.data![index].id as String));
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DetailScreen(
+                                          id: data_model[index].id.toString(),
+                                          URL: data_model[index]
+                                              .VideoURL
+                                              .toString(),
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: CategoriesWidgets(
-                                      dataModel: successState.data[index]),
+                                      dataCategoriesModel: data_model[index]),
                                 );
                               },
                             ),
@@ -199,10 +207,29 @@ class _HomeState extends State<Home> {
                             child: new ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 shrinkWrap: true,
-                                itemCount: successState.data.length,
+                                itemCount: data_model.length,
                                 itemBuilder: (context, index) {
-                                  return RecommendWidgets(
-                                      dataModel: successState.data[index]);
+                                  return TextButton(
+                                    style: TextButton.styleFrom(
+                                        foregroundColor: Colors.white),
+                                    onPressed: () {
+                                      // Get.to(() => DetailScreen(
+                                      //     item: snapshot.data![index].id as String));
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => DetailScreen(
+                                            id: data_model[index].id.toString(),
+                                            URL: data_model[index]
+                                                .VideoURL
+                                                .toString(),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: RecommendWidgets(
+                                        dataCategoriesModel: data_model[index]),
+                                  );
                                 }),
                           ),
                         ],

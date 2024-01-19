@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:demo_app_1/data/data.dart';
-import 'package:demo_app_1/featured/models/home_data_model.dart';
+import 'package:demo_app_1/data/categoris.dart';
+import 'package:demo_app_1/featured/models/categories_data_model.dart';
 import 'package:demo_app_1/featured/pages/account.dart';
 import 'package:demo_app_1/featured/pages/notification.dart';
+import 'package:equatable/equatable.dart';
 
 import 'package:meta/meta.dart';
 import 'package:get/get.dart';
@@ -11,7 +12,8 @@ part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc() : super(HomeInitial()) {
+  final CategoriesCourse _categoriesCourse;
+  HomeBloc(this._categoriesCourse) : super(HomeInitial()) {
     on<HomeInitialEvent>(homeInitialEvent);
     on<HomeNotificationButtonClickEvent>(homeNotificationButtonClickEvent);
     on<HomeAccountButtonClickEvent>(homeAccountButtonClickEvent);
@@ -24,16 +26,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       HomeInitialEvent event, Emitter<HomeState> emit) async {
     emit(HomeLoadingState());
     await Future.delayed(Duration(seconds: 2));
-    emit(HomeLoadedSuccessState(
-        data: CourseData.courseData
-            .map((e) => DataModel(
-                id: e['id'],
-                title: e['title'],
-                description: e['description'],
-                instructor: e['instructor'],
-                imageUrl: e['imageURL'],
-                price: e['price']))
-            .toList()));
+    try {
+      final data = await _categoriesCourse.fetchData();
+      emit(HomeLoadedSuccessState(data));
+    } catch (e) {
+      emit(HomeErrorState(e.toString()));
+    }
   }
 
   FutureOr<void> homeNotificationButtonClickEvent(
