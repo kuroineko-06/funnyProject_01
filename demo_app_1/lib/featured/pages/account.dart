@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:demo_app_1/featured/pages/home_pages.dart';
 import 'package:demo_app_1/service/local_auth_service.dart';
 import 'package:flutter/material.dart';
@@ -16,32 +15,40 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
   final _formKey = GlobalKey<FormState>();
-  final email = TextEditingController();
-  final password = TextEditingController();
+  final TextEditingController email = TextEditingController();
+  final TextEditingController password = TextEditingController();
 
-  void Login(email, password) async {
+  void Login() async {
     if (_formKey.currentState!.validate()) {
-      Map data = {
-        "email": email,
-        "password": password,
-      };
-      print(data);
-      var url = 'https://65a4e6d952f07a8b4a3de5b9.mockapi.io/api/user-manager';
-      var response = await http.post(
-        Uri.parse(url),
-        body: jsonEncode(data),
-      );
-      print(response.body);
-      print(response.statusCode);
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Login complete!!")));
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const Home()));
-        print('success');
-      } else {
-        print('error');
+      try {
+        var url =
+            'https://65a4e6d952f07a8b4a3de5b9.mockapi.io/api/user-manager';
+        var response = await http.get(
+          Uri.parse(url),
+        );
+        print(response.body);
+        print(response.statusCode);
+        if (response.statusCode == 200) {
+          final List<dynamic> dataList = jsonDecode(response.body);
+          for (var data in dataList) {
+            String user_data = data['email'];
+            String user_pass = data['password'];
+            print('email: $user_data, pass: $user_pass');
+            if (email.text == user_data && password.text == user_pass) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Login complete!!")));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Home()));
+            }
+          }
+        } else {
+          print('error');
+        }
+      } catch (e) {
+        // Handle network or other errors
+        print('Error: $e');
       }
+      ;
     }
   }
 
@@ -189,8 +196,7 @@ class _AccountState extends State<Account> {
                                                     color: Colors.white),
                                               ),
                                               onPressed: () {
-                                                Login(
-                                                    email.text, password.text);
+                                                Login();
                                               }),
                                           ElevatedButton.icon(
                                             style: ElevatedButton.styleFrom(

@@ -3,8 +3,6 @@ import 'package:demo_app_1/featured/models/categories_data_model.dart';
 import 'package:http/http.dart' as http;
 
 class DetailCourse {
-  final String baseUrl =
-      "https://65a4e6d952f07a8b4a3de5b9.mockapi.io/api/categories";
   Future<DataCategoriesModel> getDetailById(id) async {
     final response = await http.get(
         Uri.parse(

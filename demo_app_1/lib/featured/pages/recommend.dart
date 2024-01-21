@@ -1,40 +1,23 @@
 import 'package:demo_app_1/data/detail_course.dart';
 import 'package:demo_app_1/featured/models/categories_data_model.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 
-class DetailScreen extends StatefulWidget {
+class RecommendedScreen extends StatefulWidget {
   final String id;
-  final String URL;
 
-  DetailScreen({required this.id, required this.URL});
+  RecommendedScreen({required this.id});
 
   @override
-  _DetailScreenState createState() => _DetailScreenState();
+  _RecommendedScreenState createState() => _RecommendedScreenState();
 }
 
-class _DetailScreenState extends State<DetailScreen> {
+class _RecommendedScreenState extends State<RecommendedScreen> {
   late Future<DataCategoriesModel> futureDetail;
-  late final VideoPlayerController videoPlayerController;
 
   @override
   void initState() {
     super.initState();
     futureDetail = DetailCourse().getDetailById(widget.id);
-
-    videoPlayerController =
-        VideoPlayerController.networkUrl(Uri.parse(widget.URL))
-          ..initialize().then((_) {
-            videoPlayerController.play();
-            // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-            setState(() {});
-          });
-  }
-
-  void dispose() {
-    videoPlayerController.dispose();
-    //    widget.videoPlayerController.dispose();
-    super.dispose();
   }
 
   @override
@@ -64,55 +47,14 @@ class _DetailScreenState extends State<DetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 10),
-                    SizedBox(
+                    Container(
                       width: double.maxFinite,
                       height: 300,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 225, 222, 222)),
-                        child: ListView(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(right: 30),
-                              width: 325,
-                              height: 300,
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: NetworkImage(
-                                          snapshot.data!.ImageURL as String))),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(right: 15),
-                              width: 300,
-                              height: 300,
-                              child: videoPlayerController.value.isInitialized
-                                  ? AspectRatio(
-                                      aspectRatio: videoPlayerController
-                                          .value.aspectRatio,
-                                      child: VideoPlayer(videoPlayerController),
-                                    )
-                                  : Container(),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          videoPlayerController.value.isPlaying
-                              ? videoPlayerController.pause()
-                              : videoPlayerController.play();
-                        });
-                      },
-                      child: Icon(
-                        videoPlayerController.value.isPlaying
-                            ? Icons.pause
-                            : Icons.play_arrow,
-                      ),
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                  snapshot.data!.ImageURL as String))),
                     ),
                     SizedBox(
                       height: 8,
@@ -267,14 +209,15 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                     ),
                     SizedBox(height: 13),
-                    Text.rich(
-                      TextSpan(
+                    RichText(
+                      text: TextSpan(
                         children: [
                           const TextSpan(
                             text: "Description: ",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontStyle: FontStyle.italic,
+                              color: Colors.black,
                               fontSize: 16,
                             ),
                           ),
@@ -284,6 +227,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                 height: -2,
                                 fontSize: 16,
                                 fontStyle: FontStyle.italic,
+                                color: Colors.black,
                               )),
                         ],
                       ),
