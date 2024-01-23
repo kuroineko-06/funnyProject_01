@@ -1,6 +1,12 @@
+//import 'dart:html';
 import 'dart:convert';
+import 'package:demo_app_1/classes/language.dart';
+import 'package:demo_app_1/classes/language_constaits.dart';
+import 'package:demo_app_1/data/sign_in_google.dart';
 import 'package:demo_app_1/featured/pages/home_pages.dart';
+import 'package:demo_app_1/main.dart';
 import 'package:demo_app_1/service/local_auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -39,6 +45,10 @@ class _AccountState extends State<Account> {
                   const SnackBar(content: Text("Login complete!!")));
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const Home()));
+              break;
+            } else if (email.text != user_data || password.text != user_pass) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(const SnackBar(content: Text("Login faild!!")));
             }
           }
         } else {
@@ -58,10 +68,40 @@ class _AccountState extends State<Account> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         centerTitle: true,
-        title: Text('Account'),
+        title: Text(translation(context).accountPage),
+        actions: [
+          Container(
+            margin: EdgeInsets.only(right: 10),
+            child: DropdownButton<Language>(
+                padding: EdgeInsets.only(top: 1.5),
+                // hint: Text(translation(context).language),
+                underline: SizedBox(),
+                icon: const Icon(
+                  Icons.language,
+                  color: Colors.red,
+                  size: 25,
+                ),
+                items: Language.languageList()
+                    .map<DropdownMenuItem<Language>>(
+                        (e) => DropdownMenuItem<Language>(
+                            value: e,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[Text(e.name)],
+                            )))
+                    .toList(),
+                onChanged: (Language? language) async {
+                  if (language != null) {
+                    Locale _locale = await setLocale(language.languageCode);
+                    MyApp.setLocale(context, _locale);
+                  }
+                }),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(
+          height: 800,
           decoration: BoxDecoration(
               image: DecorationImage(
                   fit: BoxFit.fill,
@@ -98,7 +138,7 @@ class _AccountState extends State<Account> {
                                     child: Container(
                                         margin: EdgeInsets.only(top: 50),
                                         child: Text(
-                                          'Login Here',
+                                          translation(context).login_lable,
                                           style: TextStyle(
                                               fontSize: 30,
                                               fontWeight: FontWeight.bold),
@@ -114,9 +154,10 @@ class _AccountState extends State<Account> {
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(10)),
                                         ),
-                                        labelText: 'Email',
+                                        labelText: translation(context).email,
                                         isDense: true,
-                                        hintText: 'Enter Your Email...',
+                                        hintText:
+                                            translation(context).emailHint,
                                         icon: Icon(
                                           Icons.email,
                                           color: Colors.amberAccent,
@@ -149,8 +190,9 @@ class _AccountState extends State<Account> {
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(10)),
                                       ),
-                                      hintText: "Enter password",
-                                      labelText: 'Password',
+                                      hintText:
+                                          translation(context).passwordHint,
+                                      labelText: translation(context).password,
                                       isDense: true,
                                       icon: Icon(
                                         Icons.lock,
@@ -188,10 +230,12 @@ class _AccountState extends State<Account> {
                                               style: ElevatedButton.styleFrom(
                                                 backgroundColor: Colors.teal,
                                                 fixedSize: Size.fromWidth(100),
-                                                padding: EdgeInsets.all(15),
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 15),
                                               ),
                                               child: Text(
-                                                "Sign In",
+                                                translation(context)
+                                                    .sign_in_button,
                                                 style: TextStyle(
                                                     color: Colors.white),
                                               ),
@@ -201,7 +245,7 @@ class _AccountState extends State<Account> {
                                           ElevatedButton.icon(
                                             style: ElevatedButton.styleFrom(
                                                 backgroundColor: Colors.teal,
-                                                fixedSize: Size.fromWidth(150),
+                                                fixedSize: Size.fromWidth(130),
                                                 padding: EdgeInsets.symmetric(
                                                     vertical: 10)),
                                             onPressed: () async {
@@ -217,10 +261,11 @@ class _AccountState extends State<Account> {
                                             icon: Icon(
                                               Icons.fingerprint_outlined,
                                               color: Colors.red,
-                                              size: 30,
+                                              size: 25,
                                             ),
                                             label: Text(
-                                              'FingerPrint',
+                                              translation(context)
+                                                  .finger_print_button,
                                               style: TextStyle(
                                                   color: Colors.white),
                                             ),
@@ -232,7 +277,7 @@ class _AccountState extends State<Account> {
                                   padding: EdgeInsets.only(left: 14),
                                   margin: EdgeInsets.only(top: 20),
                                   child: Text(
-                                    "Another way??",
+                                    translation(context).another_way,
                                     style: TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.bold),
@@ -251,20 +296,25 @@ class _AccountState extends State<Account> {
                                               borderRadius:
                                                   BorderRadius.circular(30),
                                             )),
-                                        onPressed: () {
-                                          //Code Here
+                                        onPressed: () async {
+                                          UserCredential? userCredential =
+                                              await signInWithGoogle();
+                                          if (userCredential != null) {
+                                            print(
+                                                "Google Sign-In Successful: ${userCredential.user?.displayName}");
+                                          } else {
+                                            print("Google Sign-In Failed");
+                                          }
                                         },
                                         child: Container(
-                                          height: 30,
-                                          width: 30,
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                            fit: BoxFit.fill,
-                                            image: NetworkImage(
-                                              'https://img.favpng.com/7/1/24/google-logo-google-search-icon-png-favpng-DLXaPGArrFH6yJjYE8USnMuvX.jpg',
-                                            ),
-                                          )),
-                                        ),
+                                            height: 30,
+                                            width: 30,
+                                            child: Image(
+                                              fit: BoxFit.cover,
+                                              image: NetworkImage(
+                                                "https://img.favpng.com/7/1/24/google-logo-google-search-icon-png-favpng-DLXaPGArrFH6yJjYE8USnMuvX.jpg",
+                                              ),
+                                            )),
                                       ),
                                       TextButton(
                                         style: ElevatedButton.styleFrom(
@@ -273,20 +323,24 @@ class _AccountState extends State<Account> {
                                               borderRadius:
                                                   BorderRadius.circular(30),
                                             )),
-                                        onPressed: () {
-                                          //Code Here
-                                        },
+                                        onPressed: () async {},
                                         child: Container(
-                                          height: 33,
-                                          width: 33,
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                            fit: BoxFit.fill,
-                                            image: NetworkImage(
-                                              'https://img.favpng.com/5/1/2/computer-icons-email-facebook-login-bluetie-inc-png-favpng-Ax0PsRCK2i6r1W39L14bmbsC3.jpg',
-                                            ),
-                                          )),
-                                        ),
+                                            height: 33,
+                                            width: 33,
+                                            // decoration: BoxDecoration(
+                                            //     image: DecorationImage(
+                                            //   fit: BoxFit.fill,
+                                            //   image: NetworkImage(
+                                            //     "https://img.favpng.com/5/1/2/computer-icons-email-facebook-login-bluetie-inc-png-favpng-Ax0PsRCK2i6r1W39L14bmbsC3.jpg",
+                                            //   ),
+                                            // )),
+
+                                            child: Image(
+                                              fit: BoxFit.cover,
+                                              image: NetworkImage(
+                                                "https://img.favpng.com/5/1/2/computer-icons-email-facebook-login-bluetie-inc-png-favpng-Ax0PsRCK2i6r1W39L14bmbsC3.jpg",
+                                              ),
+                                            )),
                                       ),
                                     ],
                                   ),

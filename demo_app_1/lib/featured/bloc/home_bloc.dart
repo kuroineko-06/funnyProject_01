@@ -1,9 +1,10 @@
+//import 'dart:html';
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:demo_app_1/data/categoris.dart';
 import 'package:demo_app_1/featured/models/categories_data_model.dart';
 import 'package:demo_app_1/featured/pages/account.dart';
-import 'package:demo_app_1/featured/pages/notification.dart';
+import 'package:demo_app_1/featured/pages/notification_screen.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:meta/meta.dart';
@@ -47,7 +48,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   FutureOr<void> homeNavigateToNotificationEvent(
       HomeNavigateToNotificationEvent event, Emitter<HomeState> emit) {
     print('Notification navigate!');
-    Get.to(() => Notification());
+    Get.to(() => NotificationPage());
   }
 
   FutureOr<void> homeNavigateToAccountEvent(

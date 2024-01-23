@@ -1,0 +1,22 @@
+{
+    "accountPage": "Account",
+    "login_lable": "Login Here",
+    "email": "Email",
+    "emailHint": "Enter Your Email....",
+    "password": "Password",
+    "passwordHint": "Enter Password....",
+    "sign_in_button": "Sign In",
+    "finger_print_button": "FingerPrint",
+    "another_way": "Another way???",
+    "homePage": "influencer.",
+    "categories": "Categories",
+    "recommend": "Recommend",
+    "seeMoreBtn": "See more",
+    "searchPage": "Search",
+    "searchHint": "What are you want to learn?",
+    "settingPage": "Setting",
+    "darkMode": "DarkMode",
+    "language": "Language",
+    "coursePage": "Course Detail",
+     "notificationPage": "Notification"
+}

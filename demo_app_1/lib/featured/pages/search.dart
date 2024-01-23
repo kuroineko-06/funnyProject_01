@@ -1,3 +1,4 @@
+import 'package:demo_app_1/classes/language_constaits.dart';
 import 'package:demo_app_1/data/categoris.dart';
 import 'package:demo_app_1/featured/bloc/search_bloc.dart';
 import 'package:demo_app_1/featured/models/categories_data_model.dart';
@@ -56,7 +57,7 @@ class _SearchState extends State<Search> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Search"),
+        title: Text(translation(context).searchPage),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -88,7 +89,7 @@ class _SearchState extends State<Search> {
                         child: TextField(
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            hintText: 'What do you want to learn?',
+                            hintText: translation(context).searchHint,
                           ),
                         ),
                       ),
@@ -101,7 +102,7 @@ class _SearchState extends State<Search> {
                             alignment: Alignment.topLeft,
                             margin: EdgeInsets.only(bottom: 10),
                             child: Text(
-                              'Categories',
+                              translation(context).categories,
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold),
                             ),

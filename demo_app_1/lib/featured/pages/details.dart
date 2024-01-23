@@ -1,3 +1,4 @@
+import 'package:demo_app_1/classes/language_constaits.dart';
 import 'package:demo_app_1/data/detail_course.dart';
 import 'package:demo_app_1/featured/models/categories_data_model.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,7 @@ class _DetailScreenState extends State<DetailScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Course Detail'),
+        title: Text(translation(context).coursePage),
         backgroundColor: Colors.orangeAccent,
       ),
       body: FutureBuilder<DataCategoriesModel>(
@@ -61,7 +62,7 @@ class _DetailScreenState extends State<DetailScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(height: 10),
                     SizedBox(
@@ -75,8 +76,8 @@ class _DetailScreenState extends State<DetailScreen> {
                           scrollDirection: Axis.horizontal,
                           children: [
                             Container(
-                              margin: EdgeInsets.only(right: 30),
-                              width: 325,
+                              margin: EdgeInsets.only(left: 17, right: 23),
+                              width: 350,
                               height: 300,
                               decoration: BoxDecoration(
                                   image: DecorationImage(
@@ -85,17 +86,17 @@ class _DetailScreenState extends State<DetailScreen> {
                                           snapshot.data!.ImageURL as String))),
                             ),
                             Container(
-                              margin: EdgeInsets.only(right: 15),
-                              width: 300,
-                              height: 300,
-                              child: videoPlayerController.value.isInitialized
-                                  ? AspectRatio(
-                                      aspectRatio: videoPlayerController
-                                          .value.aspectRatio,
-                                      child: VideoPlayer(videoPlayerController),
-                                    )
-                                  : Container(),
-                            ),
+                                margin: EdgeInsets.only(right: 20),
+                                width: 355,
+                                height: 300,
+                                child: videoPlayerController.value.isInitialized
+                                    ? AspectRatio(
+                                        aspectRatio: videoPlayerController
+                                            .value.aspectRatio,
+                                        child:
+                                            VideoPlayer(videoPlayerController),
+                                      )
+                                    : Center(child: Text("No video found"))),
                           ],
                         ),
                       ),
@@ -270,7 +271,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     Text.rich(
                       TextSpan(
                         children: [
-                          const TextSpan(
+                          TextSpan(
                             text: "Description: ",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -281,7 +282,6 @@ class _DetailScreenState extends State<DetailScreen> {
                           TextSpan(
                               text: snapshot.data!.Content,
                               style: TextStyle(
-                                height: -2,
                                 fontSize: 16,
                                 fontStyle: FontStyle.italic,
                               )),

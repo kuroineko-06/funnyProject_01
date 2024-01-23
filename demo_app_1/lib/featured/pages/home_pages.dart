@@ -1,3 +1,4 @@
+import 'package:demo_app_1/classes/language_constaits.dart';
 import 'package:demo_app_1/data/categoris.dart';
 import 'package:demo_app_1/featured/bloc/home_bloc.dart';
 import 'package:demo_app_1/featured/models/categories_data_model.dart';
@@ -89,7 +90,7 @@ class _HomeState extends State<Home> {
               appBar: AppBar(
                 automaticallyImplyLeading: false,
                 centerTitle: true,
-                title: Text('influencer.'),
+                title: Text(translation(context).homePage),
                 leading: Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: IconButton(
@@ -135,7 +136,7 @@ class _HomeState extends State<Home> {
                             alignment: Alignment.topLeft,
                             margin: EdgeInsets.only(bottom: 10),
                             child: Text(
-                              'Categories',
+                              translation(context).categories,
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold),
                             ),
@@ -184,7 +185,7 @@ class _HomeState extends State<Home> {
                             child: Row(
                               children: <Widget>[
                                 Text(
-                                  'Recommended',
+                                  translation(context).recommend,
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold),
@@ -197,7 +198,7 @@ class _HomeState extends State<Home> {
                                             Colors.blue),
                                   ),
                                   onPressed: () {},
-                                  child: Text('See more'),
+                                  child: Text(translation(context).seeMoreBtn),
                                 ),
                               ],
                             ),
@@ -213,8 +214,6 @@ class _HomeState extends State<Home> {
                                     style: TextButton.styleFrom(
                                         foregroundColor: Colors.white),
                                     onPressed: () {
-                                      // Get.to(() => DetailScreen(
-                                      //     item: snapshot.data![index].id as String));
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
