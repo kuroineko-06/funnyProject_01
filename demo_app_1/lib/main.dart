@@ -1,6 +1,7 @@
 import 'package:demo_app_1/classes/language_constaits.dart';
 import 'package:demo_app_1/data/firebase_api.dart';
 import 'package:demo_app_1/featured/pages/notification_screen.dart';
+import 'package:demo_app_1/featured/pages/see_more.dart';
 import 'package:demo_app_1/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:demo_app_1/featured/pages/account.dart';

@@ -5,12 +5,14 @@ import 'package:demo_app_1/featured/models/categories_data_model.dart';
 import 'package:demo_app_1/featured/pages/account.dart';
 import 'package:demo_app_1/featured/pages/details.dart';
 import 'package:demo_app_1/featured/pages/search.dart';
+import 'package:demo_app_1/featured/pages/see_more.dart';
 import 'package:demo_app_1/featured/pages/setting.dart';
 import 'package:demo_app_1/featured/widgets/home_categories.dart';
 import 'package:demo_app_1/featured/widgets/home_recommened.dart';
 import 'package:demo_app_1/featured/widgets/home_slide.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -197,7 +199,9 @@ class _HomeState extends State<Home> {
                                         MaterialStateProperty.all<Color>(
                                             Colors.blue),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Get.to(() => SeeMore());
+                                  },
                                   child: Text(translation(context).seeMoreBtn),
                                 ),
                               ],

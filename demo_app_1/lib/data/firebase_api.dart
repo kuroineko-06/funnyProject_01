@@ -6,6 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FirebaseApi {
   final _firebaseMessaging = FirebaseMessaging.instance;
+
   Future<void> handleBackgroundMessage(RemoteMessage message) async {
     print("Title: ${message.notification?.title}");
     print("Body: ${message.notification?.body}");
@@ -37,12 +38,15 @@ class FirebaseApi {
 
   final _localNotification = FlutterLocalNotificationsPlugin();
 
-  void handleMessage(RemoteMessage? message) {
-    if (message == null) return;
+  Future<void> handleMessage(RemoteMessage? message) async {
+    if (message == null) {
+      print('Received null message');
+      return;
+    }
     navigatorKey.currentState?.pushNamed("/notification", arguments: message);
   }
 
-  Future initLocalNotification() async {
+  Future<void> initLocalNotification() async {
     const IOS = DarwinInitializationSettings();
     const android = AndroidInitializationSettings('@drawable/ic_launcher');
     const setting = InitializationSettings(android: android, iOS: IOS);
@@ -78,6 +82,8 @@ class FirebaseApi {
           _androidChanel.id,
           _androidChanel.name,
           channelDescription: _androidChanel.description,
+          importance: Importance.max,
+          priority: Priority.max,
           icon: '@drawable/ic_launcher',
         )),
         payload: jsonEncode(message.toMap()),

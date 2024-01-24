@@ -1,8 +1,10 @@
 import 'package:demo_app_1/classes/language.dart';
 import 'package:demo_app_1/classes/language_constaits.dart';
+import 'package:demo_app_1/featured/pages/account.dart';
 import 'package:demo_app_1/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -13,17 +15,15 @@ class Setting extends StatefulWidget {
   State<Setting> createState() => _SettingState();
 }
 
-Future<bool> signOutFromGoogle() async {
-  try {
-    await FirebaseAuth.instance.signOut();
-    return true;
-  } on Exception catch (_) {
-    return false;
-  }
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+Future<void> signOutFromGoogle() async {
+  await _auth.signOut();
+  await _googleSignIn.signOut();
 }
 
 class _SettingState extends State<Setting> {
-  bool isDarkMode = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,12 +132,15 @@ class _SettingState extends State<Setting> {
                             padding: EdgeInsets.symmetric(vertical: 15),
                           ),
                           child: Text(
-                            "Log Out",
+                            translation(context).logOut,
                             // translation(context).sign_in_button,
                             style: TextStyle(color: Colors.white),
                           ),
-                          onPressed: () async {
-                            await signOutFromGoogle();
+                          onPressed: () {
+                            signOutFromGoogle();
+                            Future.delayed(Duration(seconds: 2));
+                            Get.offAll(() => Account());
+                            print("Sign out compplete!");
                           }),
                     )
                   ],

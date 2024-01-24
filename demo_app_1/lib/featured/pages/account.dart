@@ -302,6 +302,7 @@ class _AccountState extends State<Account> {
                                           if (userCredential != null) {
                                             print(
                                                 "Google Sign-In Successful: ${userCredential.user?.displayName}");
+                                            Get.to(() => Home());
                                           } else {
                                             print("Google Sign-In Failed");
                                           }
